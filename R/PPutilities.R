@@ -490,6 +490,9 @@ loo_sd = function(var,year,...)
 #' @param ... Arguments passed on to FUN.
 #'
 #' @return If bycols is not NULL, the data table dt with appended columns, else a data table with the SDcols and a singlerow for each year
+#'
+#' @import data.table
+#' @importFrom parallel mclapply
 #' @export
 
 loyo = function(dt, FUN,SDcols,bycols = c('lon','lat'),mc.cores = 4,newnamesstring = 'new',args = NULL,overwrite = F,...)
@@ -537,9 +540,9 @@ loyo = function(dt, FUN,SDcols,bycols = c('lon','lat'),mc.cores = 4,newnamesstri
     return(dt_new)
   }
 
-  ret_dt = rbindlist(mclapply(X = unique(dt[,year]),
-                              FUN = apply_by_year,
-                              mc.cores = mc.cores))
+  ret_dt = rbindlist(parallel::mclapply(X = unique(dt[,year]),
+                                        FUN = apply_by_year,
+                                        mc.cores = mc.cores))
   return(ret_dt)
 }
 
